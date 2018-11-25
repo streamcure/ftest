@@ -9,7 +9,12 @@ sc=Flask(__name__)
 sc.secret_key='k'
 @sc.route('/')
 def main():
+    return render_template('index.html')
+
+@sc.route('/lgn')
+def lgn():
     return render_template('Login.html')
+
 
 @sc.route('/Dctrreglink')
 def Dctrreglink():
@@ -34,15 +39,19 @@ def insertdoc():
     name = request.form['txtdname']
     gender = request.form['radio']
     contctno = request.form['txtcontno']
+    aadhaarno = request.form['txtaadhaarno']
+    meritalstatus=request.form['mradio']
     address = request.form['txtaddress']
+    contactaddress = request.form['txtcontactaddress']
     qualification = request.form['txtqual']
+    specialization=request.form['txtspecialization']
     experience = request.form["txtexprns"]
+    dateofjoining=request.form['txtdateofjoining']
     email = request.form['txtemail']
-    uname = request.form['txtuname']
     Dname=request.form.get('selectdept')
 
 
-    cmd.execute("insert into doctorreg values(null,'" + name + "','" + gender + "',"+ contctno +",'"+address +"', '"+qualification+"',"+experience+",'"+email+"','"+uname+"','"+str(Dname)+"')")
+    cmd.execute("insert into doctorreg values(null,'" + name + "','" + gender + "',"+ contctno +","+aadhaarno+",'"+meritalstatus+"','"+address +"','"+contactaddress+"', '"+qualification+"','"+specialization+"'"+experience+",'"+dateofjoining+"','"+email+"','"+str(Dname)+"')")
     con.commit()
     return '''<script>alert('Successfully inserted');window.location='/Dctrreglink'</script>'''
 
@@ -60,6 +69,9 @@ def add():
 @sc.route('/billlink')
 def billlink():
     return render_template('bill.html')
+
+
+
 
 @sc.route('/login',methods=['POST','GET'])
 def login():
@@ -81,6 +93,7 @@ def login():
 
 @sc.route('/viewappointmentlink')
 def viewappointmentlink():
+
     return render_template('viewappointment.html')
 
 
@@ -110,6 +123,17 @@ def depreg():
     cmd.execute("insert into department values(null,'"+deptname+"','"+txthod+"')")
     con.commit()
     return '''<script>alert('Successfully inserted');window.location='/selectdep'</script>'''
+
+# @sc.route('/depreg',methods=['POST','GET'])
+#
+# def appointment():
+#     name=request.form['txtname']
+#     txthod=request.form['txthod']
+#
+#
+#     cmd.execute("insert into department values(null,'"+deptname+"','"+txthod+"')")
+#     con.commit()
+#     return '''<script>alert('Successfully inserted');window.location='/selectdep'</script>'''
 
 
 
@@ -170,6 +194,126 @@ def insertpresc():
     con.commit()
     return '''<script>alert('Successfully inserted');window.location='/viewdl'</script>'''
 
+
+@sc.route('/signup',methods=['GET'])
+def signup():
+    name=request.args.get('name')
+
+
+@sc.route('/login1',methods=['POST','GET'])
+def login1():
+    un=request.args.get('uname')
+    pwd=request.args.get('password')
+    cmd.execute("select * from login where username='" + un + "' and password='" + pwd + "' and type='user'")
+    re = cmd.fetchone()
+    if re is None:
+        reslt={"task":"Failed"}
+        return jsonify(reslt)
+    else:
+        cmd.execute("select pid from patientreg where email='"+un+"'")
+        s=cmd.fetchone()
+        reslt = {"task": s[0]}
+        return jsonify(reslt)
+
+
+@sc.route('/patientreg',methods=['POST','GET'])
+def patientreg():
+    try:
+        name=request.args.get('name')
+        address=request.args.get('address')
+        email=request.args.get('email')
+        mobile=request.args.get('mobileno')
+        aadhaar=request.args.get('aadhaarno')
+        pwd=request.args.get('password')
+        cmd.execute("insert into patientreg values (Null,'"+name+"','"+address+"','"+email+"','"+mobile+"','"+aadhaar+"')")
+        cmd.execute("insert into login values('"+email+"','"+pwd+"','user')")
+        con.commit()
+
+        reslt = {"task": "ok"}
+        return jsonify(reslt)
+    except Exception as e:
+        print(str(e))
+        reslt = {"task": "failed"}
+        return jsonify(reslt)
+
+@sc.route('/personaldetails',methods=['POST','GET'])
+def personaldetails():
+
+        pid=request.args.get('pid')
+
+        cmd.execute("select * from patientreg where pid='"+pid+"'")
+        rowheader=[x[0] for x in cmd.description]
+        jsondata=[]
+        re=cmd.fetchall()
+        for r in re:
+            jsondata.append(dict(zip(rowheader,r)))
+        return jsonify(jsondata)
+
+
+@sc.route('/viewbooking',methods=['POST','GET'])
+def viewbooking():
+
+        pid=request.args.get('pid')
+
+        cmd.execute("select date,tokenno from appointment where pid='"+pid+"'")
+        rowheader=[x[0] for x in cmd.description]
+        jsondata=[]
+        re=cmd.fetchall()
+        for r in re:
+            jsondata.append(dict(zip(rowheader,r)))
+            print(jsondata)
+        return jsonify(jsondata)
+
+@sc.route('/selectdctr',methods=['POST','GET'])
+def selectdctr():
+
+        cmd.execute("select did,name from doctorreg")
+
+        rowheader=[x[0] for x in cmd.description]
+        jsondata=[]
+        re=cmd.fetchall()
+        for r in re:
+            jsondata.append(dict(zip(rowheader,r)))
+        print(jsondata)
+        return jsonify(jsondata)
+
+@sc.route('/scheduleview',methods=['POST','GET'])
+def scheduleview():
+
+        did=request.args.get('did')
+
+        cmd.execute("select * from schedule where did='"+str(did)+"'")
+        rowheader=[x[0] for x in cmd.description]
+        jsondata=[]
+        re=cmd.fetchall()
+        for r in re:
+            jsondata.append(dict(zip(rowheader,r)))
+            print(jsondata)
+        return jsonify(jsondata)
+
+
+@sc.route('/insertappointment',methods=['POST','GET'])
+def insertappointment():
+
+
+        date=request.args.get('date')
+        sid=request.args.get('sid')
+        pid=request.args.get('pid')
+
+        cmd.execute("select max(tokenno) from appointment where sid="+sid+" and date='"+date+"'")
+        s=cmd.fetchone()
+        tno=0
+        try:
+            tno=int(s[0])+1
+        except:
+            tno=1
+        cmd.execute("insert into appointment values(null,'"+date+"','"+str(sid)+"','"+str(pid)+"','"+str(tno)+"')")
+        con.commit()
+
+        jsondata={"tid":str(tno)}
+        return jsonify(jsondata)
+
+
 if __name__=='__main__':
-    sc.run(debug=True)
+    sc.run(host="192.168.43.128",port=5000)
 

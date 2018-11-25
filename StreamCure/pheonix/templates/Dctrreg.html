@@ -95,16 +95,15 @@
   color: #EF3B3A;
 }
 body {
-  background: #76b852; /* fallback for old browsers */
-  background: -webkit-linear-gradient(right, #76b852, #8DC26F);
-  background: -moz-linear-gradient(right, #76b852, #8DC26F);
-  background: -o-linear-gradient(right, #76b852, #8DC26F);
-  background: linear-gradient(to left, #76b852, #8DC26F);
+  background: #0298dc; /* fallback for old browsers */
+  background: -webkit-linear-gradient(right, #ffffff, #0298dc);
+  background: -moz-linear-gradient(right, #ffffff, #0298dc);
+  background: -o-linear-gradient(right, #ffffff, #0298dc);
+  background: linear-gradient(to left, #ffffff, #0298dc);
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-  </style>
+}  </style>
 
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -149,8 +148,29 @@ body {
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
+   <tr>
+    <td>Aadhaar No</td>
+    <td>
+      <label for="txtaadhaar"></label>
+      <input type="text" name="txtaadhaarno" id="txtaadhaarno" />
+  </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
   <tr>
-    <td>Address</td>
+    <td>Marital Status</td>
+    <td>
+      <input type="radio" name="mradio" id="radio" value="single" />
+      <label for="radio">Single</label></td>
+    <td>
+      <input type="radio" name="mradio" id="radio2" value="married" />
+      <label for="radio2">Married</label>
+  </td>
+    <td>&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td>Permanant Address</td>
     <td>
       <label for="txtaddress"></label>
       <textarea name="txtaddress" id="txtaddress" cols="45" rows="5"></textarea>
@@ -158,11 +178,30 @@ body {
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
+   <tr>
+    <td>Contact Address</td>
+    <td>
+      <label for="txtcontactaddress"></label>
+      <textarea name="txtcontactaddress" id="txtcontactaddress" cols="45" rows="5"></textarea>
+  </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+ 
   <tr>
     <td>Qualification</td>
     <td>
       <label for="txtqual"></label>
       <input type="text" name="txtqual" id="txtqual" />
+    </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+   <tr>
+    <td>Specialization</td>
+    <td>
+      <label for="txtspecialization"></label>
+      <input type="text" name="txtspecialization" id="txtspecialization" />
     </td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -176,6 +215,16 @@ body {
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
+   <tr>
+    <td>Date Of Joining</td>
+    <td>
+      <label for="txtdateofjoining"></label>
+      <input type="text" name="txtdateofjoining" id="txtdateofjoining" />
+   </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+ 
   <tr>
     <td>Email</td>
     <td>
@@ -188,7 +237,6 @@ body {
   <tr>
     <td>Department</td>
     <td>
-      <label for="txtuname"></label>
       <label for="selectdept"></label>
       <select name="selectdept" id="selectdept">
         <option value="1">Select</option>
@@ -197,12 +245,6 @@ body {
 
         {% endfor %}
       </select></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td>Uname</td>
-    <td><input type="text" name="txtuname" id="txtuname" /></td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
